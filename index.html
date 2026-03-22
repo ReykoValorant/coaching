@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROMETA — Hero</title>
+<title>Goaching — Hero</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -196,9 +196,80 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 0.45rem;
   }
+
+  /* ── Nav ── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 0 clamp(1.5rem, 5vw, 5rem);
+    height: 72px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: background 0.4s, border-bottom 0.4s, backdrop-filter 0.4s;
+  }
+  .nav.scrolled {
+    background: rgba(5,5,5,0.85);
+    backdrop-filter: blur(24px) saturate(1.2);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none;
+  }
+  .nav-hex {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #00f3ff, #c850c0);
+    clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+    opacity: 0.9;
+  }
+  .nav-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.14em;
+    color: #EDEDF3;
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 2.5rem;
+  }
+  .nav-link {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #A8A8B8;
+    text-decoration: none;
+    transition: color 0.25s;
+  }
+  .nav-link:hover { color: #EDEDF3; }
+  .btn-access {
+    background: #00f3ff; color: #050505; border: none;
+    font-family: 'DM Sans', sans-serif; font-weight: 700;
+    font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 0.6rem 1.6rem; border-radius: 2px; cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    text-decoration: none; display: inline-block;
+  }
+  .btn-access:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 24px rgba(0,243,255,0.35), 0 4px 20px rgba(0,0,0,0.3);
+  }
 </style>
 </head>
 <body>
+
+  <!-- Nav -->
+  <nav class="nav" id="nav">
+    <a class="nav-logo" href="#">
+      <div class="nav-hex"></div>
+      <span class="nav-brand">GOACHING</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="#">Courses</a>
+      <a class="nav-link" href="#">Coaches</a>
+    </div>
+    <a class="btn-access" href="#">Get Access</a>
+  </nav>
 
   <!-- Background layers -->
   <div class="cursor-glow" id="glow"></div>
@@ -209,7 +280,7 @@
   <div class="hero">
     <div class="eyebrow r1">
       <div class="eyebrow-line"></div>
-      <span class="eyebrow-text">The Valorant Academy</span>
+      <span class="eyebrow-text">Goaching</span>
       <div class="eyebrow-line"></div>
     </div>
 
