@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goaching — Hero</title>
+<title>Goaching - Hero</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -207,11 +207,6 @@
     border-bottom: 1px solid transparent;
     transition: background 0.4s, border-bottom 0.4s, backdrop-filter 0.4s;
   }
-  .nav.scrolled {
-    background: rgba(5,5,5,0.85);
-    backdrop-filter: blur(24px) saturate(1.2);
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
   .nav-logo {
     display: flex; align-items: center; gap: 12px;
     text-decoration: none;
@@ -232,25 +227,24 @@
     display: flex; align-items: center; gap: 2.5rem;
   }
   .nav-link {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: #A8A8B8;
+    color: #52526A;
     text-decoration: none;
-    transition: color 0.25s;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.3s;
   }
-  .nav-link:hover { color: #EDEDF3; }
-  .btn-access {
+  .nav-link:hover { color: #A8A8B8; }
+  .btn-sm {
     background: #00f3ff; color: #050505; border: none;
     font-family: 'DM Sans', sans-serif; font-weight: 700;
-    font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
-    padding: 0.6rem 1.6rem; border-radius: 2px; cursor: pointer;
+    font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 0.5rem 1.5rem; border-radius: 2px; cursor: pointer;
     transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
     text-decoration: none; display: inline-block;
   }
-  .btn-access:hover {
+  .btn-sm:hover {
     transform: translateY(-1px);
     box-shadow: 0 0 24px rgba(0,243,255,0.35), 0 4px 20px rgba(0,0,0,0.3);
   }
@@ -259,7 +253,7 @@
 <body>
 
   <!-- Nav -->
-  <nav class="nav" id="nav">
+  <nav class="nav">
     <a class="nav-logo" href="#">
       <div class="nav-hex"></div>
       <span class="nav-brand">GOACHING</span>
@@ -268,7 +262,7 @@
       <a class="nav-link" href="#">Courses</a>
       <a class="nav-link" href="#">Coaches</a>
     </div>
-    <a class="btn-access" href="#">Get Access</a>
+    <a class="btn-sm" href="#">Get Access</a>
   </nav>
 
   <!-- Background layers -->
