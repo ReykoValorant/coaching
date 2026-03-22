@@ -8,309 +8,452 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /* ── Design tokens (copied from page.tsx) ── */
+  :root {
+    --cyan: #00f3ff;
+    --cyan-dim: #00b8c5;
+    --pink: #FF2D78;
+    --gold: #FFB800;
+    --bg: #050505;
+    --bg-elevated: #0A0A0F;
+    --surface: rgba(255,255,255,0.035);
+    --text: #EDEDF3;
+    --text-dim: #A8A8B8;
+    --muted: #52526A;
+    --border: rgba(255,255,255,0.06);
+  }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; overflow: hidden; }
-
+  html { scroll-behavior: smooth; }
   body {
-    background: #050505;
-    color: #EDEDF3;
+    background: var(--bg);
+    color: var(--text);
     font-family: 'DM Sans', system-ui, sans-serif;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   /* ── Cursor glow ── */
   .cursor-glow {
-    position: fixed;
-    top: 0; left: 0;
-    width: 700px; height: 700px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,243,255,0.07) 0%, rgba(0,243,255,0.025) 30%, transparent 55%);
-    pointer-events: none;
-    z-index: 1;
-    will-change: transform;
-    filter: blur(10px);
+    position: fixed; top: 0; left: 0;
+    width: 700px; height: 700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,243,255,0.06) 0%, rgba(0,243,255,0.02) 30%, transparent 55%);
+    pointer-events: none; z-index: 2; will-change: transform; filter: blur(10px);
   }
 
   /* ── Dot grid ── */
   .dot-grid {
-    position: fixed; inset: 0;
     background-image: radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
     background-size: 40px 40px;
-    pointer-events: none;
   }
 
-  /* ── Ambient orbs ── */
-  @keyframes orb-a {
-    0%,100% { transform: translate(0,0) scale(1); }
-    40%     { transform: translate(35px,-25px) scale(1.04); }
-    70%     { transform: translate(-18px,20px) scale(0.96); }
-  }
-  @keyframes orb-b {
-    0%,100% { transform: translate(0,0) scale(1); }
-    35%     { transform: translate(-25px,20px) scale(0.97); }
-    65%     { transform: translate(20px,-25px) scale(1.03); }
-  }
-  .orb-cyan {
-    position: fixed; top: -18%; right: 0;
-    width: 900px; height: 900px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,243,255,0.05) 0%, rgba(0,243,255,0.012) 40%, transparent 58%);
-    filter: blur(80px); pointer-events: none;
-    animation: orb-a 20s ease-in-out infinite;
-  }
-  .orb-pink {
-    position: fixed; bottom: -12%; left: -8%;
-    width: 650px; height: 650px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(200,80,192,0.035) 0%, transparent 55%);
-    filter: blur(80px); pointer-events: none;
-    animation: orb-b 24s ease-in-out infinite;
-  }
-
-  /* ── Diagonal light ── */
-  .slash {
-    position: fixed; top: 0; right: 20%;
-    width: 1px; height: 100%;
-    background: linear-gradient(180deg, transparent, rgba(0,243,255,0.05) 30%, rgba(0,243,255,0.015) 60%, transparent);
-    transform: rotate(8deg); transform-origin: top center;
-    pointer-events: none;
-  }
-
-  /* ── Content ── */
-  .hero {
-    position: relative; z-index: 10;
-    text-align: center;
-    max-width: 900px;
-    padding: 0 1.5rem;
-  }
-
-  /* Staggered reveals */
+  /* ── Animations ── */
   @keyframes rise {
     from { opacity: 0; transform: translateY(28px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .r1 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.2s both; }
-  .r2 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.36s both; }
-  .r3 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.5s both; }
-  .r4 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.64s both; }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes glow-breathe {
+    0%,100% { box-shadow: 0 0 14px rgba(0,243,255,0.2), 0 0 44px rgba(0,243,255,0.06); }
+    50%     { box-shadow: 0 0 22px rgba(0,243,255,0.32), 0 0 60px rgba(0,243,255,0.1); }
+  }
+  @keyframes orb-drift-a {
+    0%,100% { transform: translate(0,0) scale(1); }
+    40%     { transform: translate(35px,-25px) scale(1.04); }
+    70%     { transform: translate(-18px,20px) scale(0.96); }
+  }
+  @keyframes orb-drift-b {
+    0%,100% { transform: translate(0,0) scale(1); }
+    35%     { transform: translate(-25px,20px) scale(0.97); }
+    65%     { transform: translate(20px,-25px) scale(1.03); }
+  }
+  .r1 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.05s both; }
+  .r2 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.2s both; }
+  .r3 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.36s both; }
+  .r4 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.5s both; }
+  .r5 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.64s both; }
 
-  /* Eyebrow */
-  .eyebrow {
-    display: flex; align-items: center; justify-content: center; gap: 12px;
-    margin-bottom: 2rem;
-  }
-  .eyebrow-line {
-    width: 28px; height: 1px;
-    background: rgba(0,243,255,0.3);
-  }
-  .eyebrow-text {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.58rem;
-    letter-spacing: 0.35em;
+  /* ── Shared ── */
+  .section-pad { padding: 0 clamp(1.5rem, 5vw, 5rem); }
+
+  /* ── Nav (exact copy from page.tsx) ── */
+  .nav-link {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: #00f3ff;
-    opacity: 0.75;
+    transition: color 0.3s;
+  }
+  .nav-link:hover { color: var(--text-dim); }
+
+  /* ── Buttons (exact copy from page.tsx) ── */
+  .btn-primary {
+    background: var(--cyan);
+    color: #050505;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.95rem 2.8rem;
+    border-radius: 2px;
+    cursor: pointer;
+    animation: glow-breathe 4s ease-in-out infinite;
+    transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 36px rgba(0,243,255,0.45), 0 0 90px rgba(0,243,255,0.15), 0 6px 28px rgba(0,0,0,0.4);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.09);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.95rem 2.4rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+  }
+  .btn-ghost:hover {
+    color: var(--text);
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.025);
+    transform: translateY(-2px);
+  }
+  .btn-sm {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.62rem;
+    animation: none;
+    box-shadow: none;
   }
 
-  /* Headline */
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    line-height: 0.92;
-    letter-spacing: 0.1em;
-  }
-  .line-1 {
-    display: block;
-    font-size: clamp(2.8rem, 7.5vw, 6.5rem);
-    color: #EDEDF3;
-  }
-  .line-2 {
-    display: block;
-    font-size: clamp(3.2rem, 9vw, 8rem);
-    letter-spacing: 0.14em;
-    margin-top: 0.06em;
+  /* ── Headline gradient ── */
+  .headline-accent {
     background: linear-gradient(125deg, #00f3ff 0%, #0090FF 55%, #c850c0 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Subtitle */
-  .subtitle {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1rem, 2vw, 1.22rem);
-    line-height: 1.9;
-    color: #A8A8B8;
-    font-weight: 300;
-    font-style: italic;
-    max-width: 520px;
-    margin: 2rem auto 0;
+  /* ── Horizontal rules ── */
+  .hr-glow {
+    border: none; height: 1px;
+    background: linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.05) 30%, rgba(0,243,255,0.08) 50%, rgba(255,255,255,0.05) 70%, transparent 95%);
   }
 
-  /* Buttons */
-  .btns {
-    display: flex; flex-wrap: wrap;
-    align-items: center; justify-content: center;
-    gap: 16px; margin-top: 2.5rem;
-  }
-
-  @keyframes glow-breathe {
-    0%,100% { box-shadow: 0 0 14px rgba(0,243,255,0.2), 0 0 44px rgba(0,243,255,0.06); }
-    50%     { box-shadow: 0 0 22px rgba(0,243,255,0.32), 0 0 60px rgba(0,243,255,0.1); }
-  }
-
-  .btn-primary {
-    background: #00f3ff; color: #050505; border: none;
-    font-family: 'DM Sans', sans-serif; font-weight: 700;
-    font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
-    padding: 0.95rem 2.8rem; border-radius: 2px; cursor: pointer;
-    animation: glow-breathe 4s ease-in-out infinite;
-    transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
-    text-decoration: none; display: inline-block;
-  }
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 36px rgba(0,243,255,0.45), 0 0 90px rgba(0,243,255,0.15), 0 6px 28px rgba(0,0,0,0.4);
-  }
-
-  .btn-ghost {
-    background: transparent; color: #A8A8B8;
-    border: 1px solid rgba(255,255,255,0.09);
-    font-family: 'DM Sans', sans-serif; font-weight: 500;
-    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
-    padding: 0.95rem 2.4rem; border-radius: 2px; cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
-    display: inline-flex; align-items: center; gap: 0.6rem;
+  /* ── Coach card (exact copy from page.tsx) ── */
+  .coach-card {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
     text-decoration: none;
+    display: block;
   }
-  .btn-ghost:hover {
-    color: #EDEDF3;
-    border-color: rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.025);
-    transform: translateY(-2px);
+  .coach-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,255,255,0.1);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
   }
-  .play-circle {
-    width: 24px; height: 24px; border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
+  .coach-card:hover .coach-overlay { opacity: 1; }
+  .coach-card:hover .coach-play {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .coach-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(2,2,2,0.97) 0%, rgba(5,5,5,0.75) 35%, rgba(5,5,5,0.25) 60%, transparent 80%);
+    opacity: 1;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+  }
+  .coach-play {
+    position: absolute;
+    top: 42%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+    width: 52px; height: 52px;
+    border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.45rem;
-  }
-
-  /* ── Nav ── */
-  .nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    padding: 0 clamp(1.5rem, 5vw, 5rem);
-    height: 72px;
-    display: flex; align-items: center; justify-content: space-between;
-    background: transparent;
-    border-bottom: 1px solid transparent;
-    transition: background 0.4s, border-bottom 0.4s, backdrop-filter 0.4s;
-  }
-  .nav-logo {
-    display: flex; align-items: center; gap: 12px;
-    text-decoration: none;
-  }
-  .nav-hex {
-    width: 28px; height: 28px;
-    background: linear-gradient(135deg, #00f3ff, #c850c0);
-    clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-    opacity: 0.9;
-  }
-  .nav-brand {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.3rem;
-    letter-spacing: 0.14em;
-    color: #EDEDF3;
-  }
-  .nav-links {
-    display: flex; align-items: center; gap: 2.5rem;
-  }
-  .nav-link {
-    color: #52526A;
-    text-decoration: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    transition: color 0.3s;
-  }
-  .nav-link:hover { color: #A8A8B8; }
-  .btn-sm {
-    background: #00f3ff; color: #050505; border: none;
-    font-family: 'DM Sans', sans-serif; font-weight: 700;
-    font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
-    padding: 0.5rem 1.5rem; border-radius: 2px; cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
-    text-decoration: none; display: inline-block;
-  }
-  .btn-sm:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 0 24px rgba(0,243,255,0.35), 0 4px 20px rgba(0,0,0,0.3);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+    z-index: 3;
   }
 </style>
 </head>
 <body>
 
-  <!-- Nav -->
-  <nav class="nav">
-    <a class="nav-logo" href="#">
-      <div class="nav-hex"></div>
-      <span class="nav-brand">GOACHING</span>
-    </a>
-    <div class="nav-links">
+  <!-- Cursor glow -->
+  <div class="cursor-glow" id="glow"></div>
+
+  <!-- ═══ STICKY NAV (exact copy from page.tsx) ═══ -->
+  <nav id="nav" style="
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 0 clamp(1.5rem, 5vw, 5rem);
+    height: 72px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: transparent;
+    backdrop-filter: none;
+    border-bottom: 1px solid transparent;
+    transition: background 0.4s, border-bottom 0.4s, backdrop-filter 0.4s;
+  ">
+    <!-- Logo -->
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="
+        width: 28px; height: 28px;
+        background: linear-gradient(135deg, #00f3ff, #c850c0);
+        clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+        opacity: 0.9;
+      "></div>
+      <span style="
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 0.14em;
+        color: var(--text);
+      ">GOACHING</span>
+    </div>
+
+    <!-- Center links -->
+    <div style="display:flex; align-items:center; gap:2.5rem;">
       <a class="nav-link" href="#">Courses</a>
       <a class="nav-link" href="#">Coaches</a>
     </div>
-    <a class="btn-sm" href="#">Get Access</a>
+
+    <!-- CTA -->
+    <a class="btn-primary btn-sm" href="#">Get Access</a>
   </nav>
 
-  <!-- Background layers -->
-  <div class="cursor-glow" id="glow"></div>
-  <div class="dot-grid"></div>
-  <div class="orb-cyan"></div>
-  <div class="orb-pink"></div>
-  <!-- Hero content -->
-  <div class="hero">
-    <div class="eyebrow r1">
-      <div class="eyebrow-line"></div>
-      <span class="eyebrow-text">Goaching</span>
-      <div class="eyebrow-line"></div>
+  <!-- ═══ SECTION 1 — HERO (exact copy from page.tsx) ═══ -->
+  <section style="
+    position: relative;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; overflow: hidden;
+    min-height: 100vh;
+    background: var(--bg);
+    padding-top: 72px;
+  ">
+    <!-- Bg layers -->
+    <div class="dot-grid" style="position:absolute; inset:0;"></div>
+    <div style="
+      position:absolute; top:-18%; right:0; width:900px; height:900px; border-radius:50%;
+      background: radial-gradient(circle, rgba(0,243,255,0.05) 0%, rgba(0,243,255,0.012) 40%, transparent 58%);
+      filter:blur(80px); pointer-events:none; animation: orb-drift-a 20s ease-in-out infinite;
+    "></div>
+    <div style="
+      position:absolute; bottom:-12%; left:-8%; width:650px; height:650px; border-radius:50%;
+      background: radial-gradient(circle, rgba(200,80,192,0.035) 0%, transparent 55%);
+      filter:blur(80px); pointer-events:none; animation: orb-drift-b 24s ease-in-out infinite;
+    "></div>
+
+    <!-- Content -->
+    <div style="position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; padding:0 1.5rem; max-width:900px;">
+
+      <!-- Eyebrow -->
+      <div class="r2" style="display:flex; align-items:center; gap:12px; margin-bottom:2rem;">
+        <div style="width:28px; height:1px; background:rgba(0,243,255,0.3);"></div>
+        <span style="font-family:'JetBrains Mono',monospace; color:var(--cyan); font-size:0.58rem; letter-spacing:0.35em; text-transform:uppercase; opacity:0.75;">Goaching</span>
+        <div style="width:28px; height:1px; background:rgba(0,243,255,0.3);"></div>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="r3" style="font-family:'Bebas Neue',sans-serif;">
+        <span style="display:block; font-size:clamp(2.8rem,7.5vw,6.5rem); letter-spacing:0.1em; line-height:0.92; color:var(--text);">LEARN FROM THE</span>
+        <span class="headline-accent" style="display:block; font-size:clamp(3.2rem,9vw,8rem); letter-spacing:0.14em; line-height:0.92; margin-top:0.06em;">BEST IN THE WORLD</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="r4" style="font-family:'Cormorant Garamond',serif; font-size:clamp(1rem,2vw,1.22rem); line-height:1.9; color:var(--text-dim); font-weight:300; font-style:italic; max-width:520px; margin-top:2rem;">
+        Exclusive courses from the world's best Valorant professionals. The strategies behind the trophies — now yours.
+      </p>
+
+      <!-- CTAs -->
+      <div class="r5" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:16px; margin-top:2.5rem;">
+        <a class="btn-primary" href="#">Start Learning</a>
+        <button class="btn-ghost">
+          <span style="width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:0.45rem;">&#9654;</span>
+          Watch Trailer
+        </button>
+      </div>
     </div>
 
-    <h1 class="r2">
-      <span class="line-1">LEARN FROM THE</span>
-      <span class="line-2">BEST IN THE WORLD</span>
-    </h1>
-
-    <p class="subtitle r3">
-      Exclusive courses from the world's best Valorant
-      professionals. The strategies behind the trophies - now yours.
-    </p>
-
-    <div class="btns r4">
-      <button class="btn-primary">Start Learning</button>
-      <button class="btn-ghost">
-        <span class="play-circle">&#9654;</span>
-        Watch Trailer
-      </button>
+    <!-- Scroll indicator -->
+    <div style="position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:6px; opacity:0.35; animation: fade-in 2s ease 1.5s both;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:0.5rem; letter-spacing:0.2em; color:var(--muted);">SCROLL</span>
+      <div style="width:1px; height:28px; background:linear-gradient(180deg, var(--muted), transparent);"></div>
     </div>
-  </div>
+  </section>
 
-  <!-- Scroll indicator -->
-  <div style="position:fixed; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:6px; opacity:0.35; z-index:10; animation: rise 1s cubic-bezier(0.16,1,0.3,1) 1.2s both;">
-    <span style="font-family:'JetBrains Mono',monospace; font-size:0.5rem; letter-spacing:0.2em; color:#52526A;">SCROLL</span>
-    <div style="width:1px; height:28px; background:linear-gradient(180deg, #52526A, transparent);"></div>
-  </div>
+  <!-- ═══ SECTION 2 — COACHES (exact structure from page.tsx, WIP placeholders) ═══ -->
+  <section class="section-pad" style="
+    position: relative;
+    padding-top: 6rem; padding-bottom: 6rem;
+    background: var(--bg);
+  ">
+    <hr class="hr-glow" style="margin-bottom:5rem;">
+
+    <!-- Section header -->
+    <div style="text-align:center; max-width:600px; margin:0 auto 3.5rem;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.3em; color:var(--cyan); text-transform:uppercase; opacity:0.7;">
+        Instructors
+      </span>
+      <h2 style="font-family:'Bebas Neue',sans-serif; font-size:clamp(2rem,4vw,3.2rem); letter-spacing:0.08em; margin-top:0.6rem; line-height:1.1;">
+        YOUR COACHES. <span class="headline-accent">YOUR EDGE.</span>
+      </h2>
+      <p style="font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--text-dim); margin-top:1rem; line-height:1.75; font-weight:300; font-style:italic;">
+        Every course is taught by a verified professional with international tournament experience.
+      </p>
+    </div>
+
+    <!-- Coach grid (exact structure from page.tsx, without photos) -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px; max-width:1100px; margin:0 auto;">
+
+      <!-- Bonkar -->
+      <a href="#" class="coach-card">
+        <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(0,229,255,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <!-- Monogram -->
+          <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(0,229,255,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">BNK</div>
+          <!-- Play button -->
+          <div class="coach-play" style="background:rgba(0,229,255,0.09); border:1.5px solid rgba(0,229,255,0.31); box-shadow:0 0 24px rgba(0,229,255,0.15);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#00E5FF" stroke="none"><polygon points="6 3 20 12 6 21"/></svg>
+          </div>
+          <!-- Overlay -->
+          <div class="coach-overlay"></div>
+          <!-- Bottom info -->
+          <div style="position:absolute; bottom:0; left:0; right:0; padding:1.6rem; z-index:3;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:1.7rem; letter-spacing:0.06em; color:#fff; line-height:1; text-shadow:0 2px 12px rgba(0,0,0,0.7);">BONKAR</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:#00E5FF; letter-spacing:0.14em; margin-top:6px; text-transform:uppercase; text-shadow:0 1px 8px rgba(0,0,0,0.6);">Head Coach · NRG</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:0.92rem; color:rgba(255,255,255,0.8); margin-top:8px; font-style:italic; font-weight:300; text-shadow:0 1px 8px rgba(0,0,0,0.5);">Teaches In-Game Leadership</div>
+          </div>
+          <!-- Featured badge -->
+          <div style="position:absolute; top:14px; left:14px; font-family:'JetBrains Mono',monospace; font-size:0.5rem; letter-spacing:0.18em; text-transform:uppercase; padding:4px 10px; border-radius:2px; background:rgba(0,243,255,0.15); border:1px solid rgba(0,243,255,0.25); color:var(--cyan); backdrop-filter:blur(8px); z-index:4;">Featured</div>
+        </div>
+      </a>
+
+      <!-- Boaster -->
+      <a href="#" class="coach-card">
+        <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(255,184,0,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(255,184,0,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">BST</div>
+          <div class="coach-play" style="background:rgba(255,184,0,0.09); border:1.5px solid rgba(255,184,0,0.31); box-shadow:0 0 24px rgba(255,184,0,0.15);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#FFB800" stroke="none"><polygon points="6 3 20 12 6 21"/></svg>
+          </div>
+          <div class="coach-overlay"></div>
+          <div style="position:absolute; bottom:0; left:0; right:0; padding:1.6rem; z-index:3;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:1.7rem; letter-spacing:0.06em; color:#fff; line-height:1; text-shadow:0 2px 12px rgba(0,0,0,0.7);">BOASTER</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:#FFB800; letter-spacing:0.14em; margin-top:6px; text-transform:uppercase; text-shadow:0 1px 8px rgba(0,0,0,0.6);">IGL · Fnatic</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:0.92rem; color:rgba(255,255,255,0.8); margin-top:8px; font-style:italic; font-weight:300; text-shadow:0 1px 8px rgba(0,0,0,0.5);">Teaches Mid-Round Calling</div>
+          </div>
+          <div style="position:absolute; top:14px; left:14px; font-family:'JetBrains Mono',monospace; font-size:0.5rem; letter-spacing:0.18em; text-transform:uppercase; padding:4px 10px; border-radius:2px; background:rgba(0,243,255,0.15); border:1px solid rgba(0,243,255,0.25); color:var(--cyan); backdrop-filter:blur(8px); z-index:4;">Featured</div>
+        </div>
+      </a>
+
+      <!-- TenZ -->
+      <a href="#" class="coach-card">
+        <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(123,97,255,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(123,97,255,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">TNZ</div>
+          <div class="coach-play" style="background:rgba(123,97,255,0.09); border:1.5px solid rgba(123,97,255,0.31); box-shadow:0 0 24px rgba(123,97,255,0.15);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#7B61FF" stroke="none"><polygon points="6 3 20 12 6 21"/></svg>
+          </div>
+          <div class="coach-overlay"></div>
+          <div style="position:absolute; bottom:0; left:0; right:0; padding:1.6rem; z-index:3;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:1.7rem; letter-spacing:0.06em; color:#fff; line-height:1; text-shadow:0 2px 12px rgba(0,0,0,0.7);">TENZ</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:#7B61FF; letter-spacing:0.14em; margin-top:6px; text-transform:uppercase; text-shadow:0 1px 8px rgba(0,0,0,0.6);">Duelist · Sentinels</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:0.92rem; color:rgba(255,255,255,0.8); margin-top:8px; font-style:italic; font-weight:300; text-shadow:0 1px 8px rgba(0,0,0,0.5);">Teaches Jett Mechanics</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Chronicle -->
+      <a href="#" class="coach-card">
+        <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(255,45,120,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(255,45,120,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">CHR</div>
+          <div class="coach-play" style="background:rgba(255,45,120,0.09); border:1.5px solid rgba(255,45,120,0.31); box-shadow:0 0 24px rgba(255,45,120,0.15);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#FF2D78" stroke="none"><polygon points="6 3 20 12 6 21"/></svg>
+          </div>
+          <div class="coach-overlay"></div>
+          <div style="position:absolute; bottom:0; left:0; right:0; padding:1.6rem; z-index:3;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:1.7rem; letter-spacing:0.06em; color:#fff; line-height:1; text-shadow:0 2px 12px rgba(0,0,0,0.7);">CHRONICLE</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:#FF2D78; letter-spacing:0.14em; margin-top:6px; text-transform:uppercase; text-shadow:0 1px 8px rgba(0,0,0,0.6);">Flex · Team Vitality</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:0.92rem; color:rgba(255,255,255,0.8); margin-top:8px; font-style:italic; font-weight:300; text-shadow:0 1px 8px rgba(0,0,0,0.5);">Teaches Versatile Play</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Sacy -->
+      <a href="#" class="coach-card">
+        <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(61,220,132,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(61,220,132,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">SCY</div>
+          <div class="coach-play" style="background:rgba(61,220,132,0.09); border:1.5px solid rgba(61,220,132,0.31); box-shadow:0 0 24px rgba(61,220,132,0.15);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#3DDC84" stroke="none"><polygon points="6 3 20 12 6 21"/></svg>
+          </div>
+          <div class="coach-overlay"></div>
+          <div style="position:absolute; bottom:0; left:0; right:0; padding:1.6rem; z-index:3;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:1.7rem; letter-spacing:0.06em; color:#fff; line-height:1; text-shadow:0 2px 12px rgba(0,0,0,0.7);">SACY</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:#3DDC84; letter-spacing:0.14em; margin-top:6px; text-transform:uppercase; text-shadow:0 1px 8px rgba(0,0,0,0.6);">Initiator · World Champion</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:0.92rem; color:rgba(255,255,255,0.8); margin-top:8px; font-style:italic; font-weight:300; text-shadow:0 1px 8px rgba(0,0,0,0.5);">Teaches Initiator Mastery</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Derke -->
+      <a href="#" class="coach-card">
+        <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(255,107,53,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(255,107,53,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">DRK</div>
+          <div class="coach-play" style="background:rgba(255,107,53,0.09); border:1.5px solid rgba(255,107,53,0.31); box-shadow:0 0 24px rgba(255,107,53,0.15);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#FF6B35" stroke="none"><polygon points="6 3 20 12 6 21"/></svg>
+          </div>
+          <div class="coach-overlay"></div>
+          <div style="position:absolute; bottom:0; left:0; right:0; padding:1.6rem; z-index:3;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:1.7rem; letter-spacing:0.06em; color:#fff; line-height:1; text-shadow:0 2px 12px rgba(0,0,0,0.7);">DERKE</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:#FF6B35; letter-spacing:0.14em; margin-top:6px; text-transform:uppercase; text-shadow:0 1px 8px rgba(0,0,0,0.6);">Duelist · Team Vitality</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:0.92rem; color:rgba(255,255,255,0.8); margin-top:8px; font-style:italic; font-weight:300; text-shadow:0 1px 8px rgba(0,0,0,0.5);">Teaches Aim & Positioning</div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- View all CTA -->
+    <div style="display:flex; justify-content:center; margin-top:5rem;">
+      <a href="#" class="btn-ghost">View All Coaches</a>
+    </div>
+  </section>
 
   <script>
     const glow = document.getElementById('glow');
+    const nav = document.getElementById('nav');
     let mx = 0, my = 0, cx = 0, cy = 0;
 
     window.addEventListener('mousemove', (e) => {
       mx = e.clientX;
       my = e.clientY;
     });
+
+    // Nav scroll — directly set inline styles like page.tsx does with React state
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        nav.style.background = 'rgba(5,5,5,0.85)';
+        nav.style.backdropFilter = 'blur(24px) saturate(1.2)';
+        nav.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
+      } else {
+        nav.style.background = 'transparent';
+        nav.style.backdropFilter = 'none';
+        nav.style.borderBottom = '1px solid transparent';
+      }
+    }, { passive: true });
 
     (function tick() {
       cx += (mx - cx) * 0.045;
