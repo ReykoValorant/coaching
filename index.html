@@ -232,6 +232,12 @@
     </div>
   </div>
 
+  <!-- Scroll indicator -->
+  <div style="position:fixed; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:6px; opacity:0.35; z-index:10; animation: rise 1s cubic-bezier(0.16,1,0.3,1) 1.2s both;">
+    <span style="font-family:'JetBrains Mono',monospace; font-size:0.5rem; letter-spacing:0.2em; color:#52526A;">SCROLL</span>
+    <div style="width:1px; height:28px; background:linear-gradient(180deg, #52526A, transparent);"></div>
+  </div>
+
   <script>
     const glow = document.getElementById('glow');
     let mx = 0, my = 0, cx = 0, cy = 0;
