@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROMETA — Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    background: #050505;
+    color: #EDEDF3;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Cursor glow ── */
+  .cursor-glow {
+    position: fixed;
+    top: 0; left: 0;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,243,255,0.07) 0%, rgba(0,243,255,0.025) 30%, transparent 55%);
+    pointer-events: none;
+    z-index: 1;
+    will-change: transform;
+    filter: blur(10px);
+  }
+
+  /* ── Dot grid ── */
+  .dot-grid {
+    position: fixed; inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* ── Ambient orbs ── */
+  @keyframes orb-a {
+    0%,100% { transform: translate(0,0) scale(1); }
+    40%     { transform: translate(35px,-25px) scale(1.04); }
+    70%     { transform: translate(-18px,20px) scale(0.96); }
+  }
+  @keyframes orb-b {
+    0%,100% { transform: translate(0,0) scale(1); }
+    35%     { transform: translate(-25px,20px) scale(0.97); }
+    65%     { transform: translate(20px,-25px) scale(1.03); }
+  }
+  .orb-cyan {
+    position: fixed; top: -18%; right: 0;
+    width: 900px; height: 900px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,243,255,0.05) 0%, rgba(0,243,255,0.012) 40%, transparent 58%);
+    filter: blur(80px); pointer-events: none;
+    animation: orb-a 20s ease-in-out infinite;
+  }
+  .orb-pink {
+    position: fixed; bottom: -12%; left: -8%;
+    width: 650px; height: 650px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,80,192,0.035) 0%, transparent 55%);
+    filter: blur(80px); pointer-events: none;
+    animation: orb-b 24s ease-in-out infinite;
+  }
+
+  /* ── Diagonal light ── */
+  .slash {
+    position: fixed; top: 0; right: 20%;
+    width: 1px; height: 100%;
+    background: linear-gradient(180deg, transparent, rgba(0,243,255,0.05) 30%, rgba(0,243,255,0.015) 60%, transparent);
+    transform: rotate(8deg); transform-origin: top center;
+    pointer-events: none;
+  }
+
+  /* ── Content ── */
+  .hero {
+    position: relative; z-index: 10;
+    text-align: center;
+    max-width: 900px;
+    padding: 0 1.5rem;
+  }
+
+  /* Staggered reveals */
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .r1 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.2s both; }
+  .r2 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.36s both; }
+  .r3 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.5s both; }
+  .r4 { animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.64s both; }
+
+  /* Eyebrow */
+  .eyebrow {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .eyebrow-line {
+    width: 28px; height: 1px;
+    background: rgba(0,243,255,0.3);
+  }
+  .eyebrow-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #00f3ff;
+    opacity: 0.75;
+  }
+
+  /* Headline */
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    line-height: 0.92;
+    letter-spacing: 0.1em;
+  }
+  .line-1 {
+    display: block;
+    font-size: clamp(2.8rem, 7.5vw, 6.5rem);
+    color: #EDEDF3;
+  }
+  .line-2 {
+    display: block;
+    font-size: clamp(3.2rem, 9vw, 8rem);
+    letter-spacing: 0.14em;
+    margin-top: 0.06em;
+    background: linear-gradient(125deg, #00f3ff 0%, #0090FF 55%, #c850c0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Subtitle */
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2vw, 1.22rem);
+    line-height: 1.9;
+    color: #A8A8B8;
+    font-weight: 300;
+    font-style: italic;
+    max-width: 520px;
+    margin: 2rem auto 0;
+  }
+
+  /* Buttons */
+  .btns {
+    display: flex; flex-wrap: wrap;
+    align-items: center; justify-content: center;
+    gap: 16px; margin-top: 2.5rem;
+  }
+
+  @keyframes glow-breathe {
+    0%,100% { box-shadow: 0 0 14px rgba(0,243,255,0.2), 0 0 44px rgba(0,243,255,0.06); }
+    50%     { box-shadow: 0 0 22px rgba(0,243,255,0.32), 0 0 60px rgba(0,243,255,0.1); }
+  }
+
+  .btn-primary {
+    background: #00f3ff; color: #050505; border: none;
+    font-family: 'DM Sans', sans-serif; font-weight: 700;
+    font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 0.95rem 2.8rem; border-radius: 2px; cursor: pointer;
+    animation: glow-breathe 4s ease-in-out infinite;
+    transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 36px rgba(0,243,255,0.45), 0 0 90px rgba(0,243,255,0.15), 0 6px 28px rgba(0,0,0,0.4);
+  }
+
+  .btn-ghost {
+    background: transparent; color: #A8A8B8;
+    border: 1px solid rgba(255,255,255,0.09);
+    font-family: 'DM Sans', sans-serif; font-weight: 500;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 0.95rem 2.4rem; border-radius: 2px; cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    text-decoration: none;
+  }
+  .btn-ghost:hover {
+    color: #EDEDF3;
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.025);
+    transform: translateY(-2px);
+  }
+  .play-circle {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.45rem;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Background layers -->
+  <div class="cursor-glow" id="glow"></div>
+  <div class="dot-grid"></div>
+  <div class="orb-cyan"></div>
+  <div class="orb-pink"></div>
+  <!-- Hero content -->
+  <div class="hero">
+    <div class="eyebrow r1">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">The Valorant Academy</span>
+      <div class="eyebrow-line"></div>
+    </div>
+
+    <h1 class="r2">
+      <span class="line-1">LEARN FROM THE</span>
+      <span class="line-2">BEST IN THE WORLD</span>
+    </h1>
+
+    <p class="subtitle r3">
+      Exclusive courses from the world's best Valorant
+      professionals. The strategies behind the trophies - now yours.
+    </p>
+
+    <div class="btns r4">
+      <button class="btn-primary">Start Learning</button>
+      <button class="btn-ghost">
+        <span class="play-circle">&#9654;</span>
+        Watch Trailer
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const glow = document.getElementById('glow');
+    let mx = 0, my = 0, cx = 0, cy = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+    });
+
+    (function tick() {
+      cx += (mx - cx) * 0.045;
+      cy += (my - cy) * 0.045;
+      glow.style.transform = `translate(${cx - 350}px, ${cy - 350}px)`;
+      requestAnimationFrame(tick);
+    })();
+  </script>
+
+</body>
+</html>
