@@ -182,6 +182,20 @@
     transition: opacity 0.4s ease;
     z-index: 1;
   }
+  /* ── Feature card ── */
+  .feature-card {
+    padding: 2rem 1.8rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.015);
+    transition: all 0.35s ease;
+  }
+  .feature-card:hover {
+    border-color: rgba(0,243,255,0.15);
+    background: rgba(0,243,255,0.02);
+    transform: translateY(-3px);
+  }
+
   .coach-play {
     position: absolute;
     top: 42%; left: 50%;
@@ -192,6 +206,17 @@
     opacity: 0;
     transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
     z-index: 3;
+  }
+
+  /* ── Scroll-triggered section reveals (exact copy from page.tsx) ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 </style>
 </head>
@@ -297,7 +322,8 @@
     </div>
   </section>
 
-  <!-- ═══ SECTION 2 — COACHES (exact structure from page.tsx, WIP placeholders) ═══ -->
+  <!-- ═══ SECTION 2 — COACHES ═══ -->
+  <div class="reveal">
   <section class="section-pad" style="
     position: relative;
     padding-top: 6rem; padding-bottom: 6rem;
@@ -324,6 +350,7 @@
       <!-- Bonkar -->
       <a href="#" class="coach-card">
         <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(0,229,255,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <img src="public/coaches/NRG_bonkar.webp" alt="Bonkar" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top center; z-index:1;">
           <!-- Monogram -->
           <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(0,229,255,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">BNK</div>
           <!-- Play button -->
@@ -346,6 +373,7 @@
       <!-- Boaster -->
       <a href="#" class="coach-card">
         <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(255,184,0,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <img src="public/coaches/Fnatic_Boaster.webp" alt="Boaster" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top center; z-index:1;">
           <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(255,184,0,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">BST</div>
           <div class="coach-play" style="background:rgba(255,184,0,0.09); border:1.5px solid rgba(255,184,0,0.31); box-shadow:0 0 24px rgba(255,184,0,0.15);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#FFB800" stroke="none"><polygon points="6 3 20 12 6 21"/></svg>
@@ -363,6 +391,7 @@
       <!-- TenZ -->
       <a href="#" class="coach-card">
         <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(123,97,255,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <img src="public/coaches/Tenz.webp" alt="TenZ" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top center; z-index:1;">
           <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(123,97,255,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">TNZ</div>
           <div class="coach-play" style="background:rgba(123,97,255,0.09); border:1.5px solid rgba(123,97,255,0.31); box-shadow:0 0 24px rgba(123,97,255,0.15);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#7B61FF" stroke="none"><polygon points="6 3 20 12 6 21"/></svg>
@@ -379,6 +408,7 @@
       <!-- Chronicle -->
       <a href="#" class="coach-card">
         <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(255,45,120,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <img src="public/coaches/Chronicle.webp" alt="Chronicle" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top center; z-index:1;">
           <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(255,45,120,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">CHR</div>
           <div class="coach-play" style="background:rgba(255,45,120,0.09); border:1.5px solid rgba(255,45,120,0.31); box-shadow:0 0 24px rgba(255,45,120,0.15);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#FF2D78" stroke="none"><polygon points="6 3 20 12 6 21"/></svg>
@@ -395,6 +425,7 @@
       <!-- Sacy -->
       <a href="#" class="coach-card">
         <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(61,220,132,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <img src="public/coaches/sacy.webp" alt="Sacy" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top center; z-index:1;">
           <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(61,220,132,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">SCY</div>
           <div class="coach-play" style="background:rgba(61,220,132,0.09); border:1.5px solid rgba(61,220,132,0.31); box-shadow:0 0 24px rgba(61,220,132,0.15);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#3DDC84" stroke="none"><polygon points="6 3 20 12 6 21"/></svg>
@@ -411,6 +442,7 @@
       <!-- Derke -->
       <a href="#" class="coach-card">
         <div style="position:relative; height:320px; background:radial-gradient(ellipse at 30% 25%, rgba(255,107,53,0.08) 0%, transparent 60%), linear-gradient(155deg, #0C0C14 0%, #080810 100%);">
+          <img src="public/coaches/derke.webp" alt="Derke" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top center; z-index:1;">
           <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-55%); font-family:'Bebas Neue',sans-serif; font-size:5.5rem; color:rgba(255,107,53,0.10); letter-spacing:0.12em; user-select:none; line-height:1; z-index:0;">DRK</div>
           <div class="coach-play" style="background:rgba(255,107,53,0.09); border:1.5px solid rgba(255,107,53,0.31); box-shadow:0 0 24px rgba(255,107,53,0.15);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#FF6B35" stroke="none"><polygon points="6 3 20 12 6 21"/></svg>
@@ -431,6 +463,70 @@
       <a href="#" class="btn-ghost">View All Coaches</a>
     </div>
   </section>
+  </div>
+
+  <!-- ═══ SECTION 3 — WHAT'S INSIDE EVERY COURSE ═══ -->
+  <div class="reveal">
+  <section class="section-pad" style="
+    position: relative;
+    padding-top: 5rem; padding-bottom: 6rem;
+    background: var(--bg-elevated);
+  ">
+    <hr class="hr-glow" style="margin-bottom:5rem;">
+
+    <div style="text-align:center; max-width:560px; margin:0 auto 3rem;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.3em; color:var(--cyan); text-transform:uppercase; opacity:0.7;">
+        The Platform
+      </span>
+      <h2 style="font-family:'Bebas Neue',sans-serif; font-size:clamp(1.8rem,3.5vw,2.8rem); letter-spacing:0.08em; margin-top:0.6rem; line-height:1.1;">
+        WHAT'S INSIDE <span class="headline-accent">EVERY COURSE</span>
+      </h2>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:18px; max-width:1050px; margin:0 auto;">
+
+      <!-- Cinematic Video Lessons -->
+      <div class="feature-card">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(0,243,255,0.08)" stroke="rgba(0,243,255,0.55)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        <h3 style="font-size:0.92rem; font-weight:600; letter-spacing:0.01em; margin-top:1rem; margin-bottom:0.5rem;">Cinematic Video Lessons</h3>
+        <p style="font-size:0.82rem; color:var(--text-dim); line-height:1.7; font-weight:300;">Over-the-shoulder gameplay breakdowns filmed in studio quality.</p>
+      </div>
+
+      <!-- Pro Decision-Making -->
+      <div class="feature-card">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(0,243,255,0.55)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9.5 2A5.5 5.5 0 0 0 5 9.5c0 1.5.5 2.5 1.5 3.5L12 21l5.5-8c1-1 1.5-2 1.5-3.5A5.5 5.5 0 0 0 14.5 2 5.5 5.5 0 0 0 12 3a5.5 5.5 0 0 0-2.5-1z"/>
+        </svg>
+        <h3 style="font-size:0.92rem; font-weight:600; letter-spacing:0.01em; margin-top:1rem; margin-bottom:0.5rem;">Pro Decision-Making</h3>
+        <p style="font-size:0.82rem; color:var(--text-dim); line-height:1.7; font-weight:300;">Understand the why behind every peek, rotate, and callout.</p>
+      </div>
+
+      <!-- Own It Forever -->
+      <div class="feature-card">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(0,243,255,0.55)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+        </svg>
+        <h3 style="font-size:0.92rem; font-weight:600; letter-spacing:0.01em; margin-top:1rem; margin-bottom:0.5rem;">Own It Forever</h3>
+        <p style="font-size:0.82rem; color:var(--text-dim); line-height:1.7; font-weight:300;">No subscriptions. Buy a course, keep it for life.</p>
+      </div>
+
+      <!-- Agent & Map Specific -->
+      <div class="feature-card">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(0,243,255,0.06)" stroke="rgba(0,243,255,0.55)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+          <polyline points="2 17 12 22 22 17"/>
+          <polyline points="2 12 12 17 22 12"/>
+        </svg>
+        <h3 style="font-size:0.92rem; font-weight:600; letter-spacing:0.01em; margin-top:1rem; margin-bottom:0.5rem;">Agent & Map Specific</h3>
+        <p style="font-size:0.82rem; color:var(--text-dim); line-height:1.7; font-weight:300;">Deep-dives into lineups, setups, and strats per agent and map.</p>
+      </div>
+
+    </div>
+  </section>
+  </div>
 
   <script>
     const glow = document.getElementById('glow');
@@ -461,6 +557,17 @@
       glow.style.transform = `translate(${cx - 350}px, ${cy - 350}px)`;
       requestAnimationFrame(tick);
     })();
+
+    // Scroll-triggered reveals (exact copy of ScrollReveal from page.tsx)
+    document.querySelectorAll('.reveal').forEach(el => {
+      const obs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('visible');
+          obs.disconnect();
+        }
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      obs.observe(el);
+    });
   </script>
 
 </body>
